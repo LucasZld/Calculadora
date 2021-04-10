@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-//sam
+
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	
@@ -27,8 +27,6 @@ public class Calculadora extends JFrame implements ActionListener{
 	private JPanel contentPane;
 	private JLabel lblMostrar;
 	private JLabel lblResumen;
-
-	
 
 	/**
 	 * Launch the application.
@@ -109,8 +107,6 @@ public class Calculadora extends JFrame implements ActionListener{
 			contentPane.add(btn[i]);
 			btn[i].addActionListener(this);
 		}
-		
-		
 	}
 	
 	public boolean siEsNum(String cad) {
@@ -131,7 +127,7 @@ public class Calculadora extends JFrame implements ActionListener{
 	}
 	
 	public void borrarLast() {
-		if (!cadenaCal.isEmpty()) { 	//si no est√° vac√≠a har√° algo
+		if (!cadenaCal.isEmpty()) { 	//Si no est· vacÌa har· algo
 			int last=cadenaCal.size()-1;
 			if (cadenaCal.get(last)==".") {
 				haypunto=false;
@@ -180,7 +176,6 @@ public class Calculadora extends JFrame implements ActionListener{
 
 					break;
 				
-					
 				default: //cualquier simbolo sin caso
 					if (!haysimbolo && !primerNum) {
 						cadenaCal.add(s);
@@ -192,14 +187,11 @@ public class Calculadora extends JFrame implements ActionListener{
 					break;
 				}
 			}
-			
 		}
 		
 		if (s=="C") {
 			limpiarC();
 		}
-	
-		
 	}
 }
 
