@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-//maskdmas
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	
@@ -53,12 +52,12 @@ public class Calculadora extends JFrame implements ActionListener{
 	public Calculadora() {
 		this.setResizable(false); // BLOQUEAR EL CAMBIO DE RESOLUCION DE LA VENTANA
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 451, 478);
-		setBounds(100, 100, 305, 478);
+		setBounds(0, 0, 305, 478);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		lblMostrar = new JLabel("", SwingConstants.RIGHT);
 		lblMostrar.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -108,7 +107,7 @@ public class Calculadora extends JFrame implements ActionListener{
 			btn[i]=new Botones(simbolos[i]);
 			btn[i].setBounds(10+70*(i%6), 90+70*(i/6), 60, 60);
 			contentPane.add(btn[i]);
-			btn[i].addActionListener(this); //-
+			btn[i].addActionListener(this);
 		}
 		
 		
@@ -177,7 +176,7 @@ public class Calculadora extends JFrame implements ActionListener{
 					break;
 				case "\u2190":
 					borrarLast();
-					lblMostrar.setText(cadenaCal.toString()); //cambiar contenido
+					lblMostrar.setText(cadenaCal.toString());
 
 					break;
 				
