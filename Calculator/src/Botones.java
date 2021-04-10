@@ -3,7 +3,7 @@ import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.JButton;
-//123123
+
 public class Botones extends JButton {
 	private static final long serialVersionUID = 3371129195730517565L;
 
