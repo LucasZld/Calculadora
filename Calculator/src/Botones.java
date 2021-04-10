@@ -8,13 +8,14 @@ public class Botones extends JButton {
 	private static final long serialVersionUID = 3371129195730517565L;
 
 	private String simbolo;
+	private float num;
 	private boolean numero;
 	
 	public Botones(String text) {
 		super(text);
 		simbolo = text;
 		try {
-			Float.parseFloat(text);
+			num = Float.parseFloat(text);
 			numero = true;
 		} catch (Exception e) {
 			numero = false;
@@ -33,6 +34,10 @@ public class Botones extends JButton {
 
 	public boolean isNumero() {
 		return numero;
+	}
+	
+	public float getNum() {
+		return num;
 	}
 	
 	public void setColor() {

@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-//FUNCIONA?
-
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	
@@ -23,8 +21,10 @@ public class Calculadora extends JFrame implements ActionListener{
 	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","%", "0", ".", "=", "s9", "s10"};
 	private Operaciones op = new Operaciones();
 	private ArrayList<String> cadenaCal = new ArrayList<String>();
+	private ArrayList<Float> cadenaNum = new ArrayList<Float>();
+	
 	private StringBuilder cadena1;
-	private boolean haysimbolo=false, haypunto=false, primerNum=true, pParentesis=false, sParentesis=false;
+	private boolean haysimbolo=false, haypunto=false, primerNum=true;
 	
 	private JPanel contentPane;
 	private JLabel lblMostrar;
@@ -70,13 +70,13 @@ public class Calculadora extends JFrame implements ActionListener{
 			boolean exp = false;
 			public void actionPerformed(ActionEvent e) {
 				if (exp) {
-					setBounds(100, 100, 305, 478);
+					setBounds(getX(), getY(), 305, 478);
 					lblMostrar.setBounds(10, 11, 270, 68);
 					expandir.setText("\u21F1");
 					exp=false;
 				}
 				else {
-					setBounds(100, 100, 445, 478);
+					setBounds(getX(), getY(), 445, 478);
 					lblMostrar.setBounds(10, 11, 410, 68);
 					expandir.setText("\u21F2");
 					exp=true;
@@ -152,6 +152,8 @@ public class Calculadora extends JFrame implements ActionListener{
 			cadenaCal.add(s);
 			lblMostrar.setText(lblMostrar.getText() + "" + s);
 			haysimbolo=false;
+			cadenaNum.add(a.getNum());
+			
 			
 		} 
 		else {
@@ -196,5 +198,3 @@ public class Calculadora extends JFrame implements ActionListener{
 		}
 	}
 }
-
-
