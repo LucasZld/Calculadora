@@ -6,7 +6,9 @@ import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,17 +20,17 @@ public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	
 	private Botones[] btn;
-	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","%", "0", ".", "=", "s9", "s10"};
+	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "s10"};
 	private Operaciones op = new Operaciones();
 	private ArrayList<String> cadenaCal = new ArrayList<String>();
 	private ArrayList<Float> cadenaNum = new ArrayList<Float>();
 	
-	private StringBuilder cadena1;
+	private StringBuilder strMostrar  = new StringBuilder(), strResumen = new StringBuilder();
 	private boolean haysimbolo=false, haypunto=false, primerNum=true;
 	
 	private JPanel contentPane;
 	private JLabel lblMostrar;
-	private JLabel lblResumen;
+	private JTextField lblResumen;
 
 	/**
 	 * Launch the application.
@@ -62,6 +64,7 @@ public class Calculadora extends JFrame implements ActionListener{
 		lblMostrar = new JLabel("", SwingConstants.RIGHT);
 		lblMostrar.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblMostrar.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		lblMostrar.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.gray), new EmptyBorder(10,10,10,10)));
 		lblMostrar.setBounds(10, 11, 270, 68);
 		contentPane.add(lblMostrar);
 		
@@ -72,11 +75,13 @@ public class Calculadora extends JFrame implements ActionListener{
 				if (exp) {
 					setBounds(getX(), getY(), 305, 478);
 					lblMostrar.setBounds(10, 11, 270, 68);
+					lblResumen.setBounds(12, 13, 133, 35);
 					expandir.setText("\u21F1");
 					exp=false;
 				}
 				else {
 					setBounds(getX(), getY(), 445, 478);
+					lblResumen.setBounds(12, 13, 233, 35);
 					lblMostrar.setBounds(10, 11, 410, 68);
 					expandir.setText("\u21F2");
 					exp=true;
@@ -85,21 +90,22 @@ public class Calculadora extends JFrame implements ActionListener{
 			}
 		});
 		expandir.setFont(new Font("SansSerif", Font.PLAIN, 15));
-		expandir.setBackground(Color.LIGHT_GRAY);
-		expandir.setBounds(10, 49, 30, 30);
+		expandir.setBackground(new Color(238, 238, 238));
+		expandir.setBorder(null);
+		expandir.setBounds(11, 48, 30, 30);
 		expandir.setMargin(new Insets(0,0,0,0));
 		expandir.setFocusable(false);
 		setFont(new Font("Tahoma", Font.PLAIN,18));
 		contentPane.add(expandir);
 		
-		lblResumen = new JLabel("");
+		lblResumen = new JTextField("");
+		lblResumen.setEditable(false);
 		lblResumen.setForeground(Color.LIGHT_GRAY);
 		lblResumen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblResumen.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		lblResumen.setBounds(10, 11, 133, 39);
+		lblResumen.setBounds(12, 13, 133, 35);
 		lblResumen.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.add(lblResumen);
-		
 		
 		btn = new Botones[30];
 		
@@ -124,6 +130,10 @@ public class Calculadora extends JFrame implements ActionListener{
 		cadenaCal.clear();
 		lblMostrar.setText("");
 		lblResumen.setText("");
+		strMostrar.delete(0, strMostrar.length());
+		strResumen.delete(0, strResumen.length());
+		cadenaCal.clear();
+		cadenaNum.clear();
 		haypunto=false;
 		haysimbolo=false;
 	}
@@ -137,32 +147,61 @@ public class Calculadora extends JFrame implements ActionListener{
 			cadenaCal.remove(last);
 		}
 	}
+	
+	public void actualizarlbl(JLabel lbl) {
+		if (lbl.equals(lblMostrar)) {
+			lbl.setText(strMostrar.toString());
+		}
+		else {
+			lbl.setText(strResumen.toString());
+		}
+		
+	}
+	
+	public void actualizarlbl(JTextField lbl) {
+		if (lbl.equals(lblMostrar)) {
+			lbl.setText(strMostrar.toString());
+		}
+		else {
+			lbl.setText(strResumen.toString());
+		}
+		
+	}
+	
+	public void pulsarSimbolos(String s) {
+		if (s!="=") {
+			cadenaCal.add(s);
+		}
+		cadenaNum.add(Float.parseFloat(lblMostrar.getText()));
+		strResumen.append(strMostrar.toString() + s);
+		strMostrar.delete(0, strMostrar.length());
+		
+		actualizarlbl(lblResumen);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String s = e.getActionCommand();
 		Botones a = (Botones)e.getSource();
+		String s = a.getSimbolo();
 		
 		if (a.isNumero()) {
-			System.out.println("si");
 			if (primerNum) {
 				primerNum=false;
 				lblMostrar.setText("");
 			}
-			cadenaCal.add(s);
-			lblMostrar.setText(lblMostrar.getText() + "" + s);
+			strMostrar.append(a.getSimbolo());
+			actualizarlbl(lblMostrar);
 			haysimbolo=false;
-			cadenaNum.add(a.getNum());
 			
 			
 		} 
 		else {
 			if (s!= "=" && s!="C") {
 				switch (s) {
-				case "-":	//NUMERO NEGATIVO NO COMPLETADO
+				case "±":	//NUMERO NEGATIVO NO COMPLETADO
 					cadenaCal.add(s);
-					lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s); //no tiene que suceder si pones un n√∫mero negativo hasta que se introduzca otro simbolo
-					lblMostrar.setText(lblMostrar.getText()+s);
+					lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"-"); //no tiene que suceder si pones un n√∫mero negativo hasta que se introduzca otro simbolo
+					lblMostrar.setText(lblMostrar.getText()+"-");
 					haysimbolo=true;
 					primerNum=true;
 					break;
@@ -172,18 +211,17 @@ public class Calculadora extends JFrame implements ActionListener{
 						lblMostrar.setText(lblMostrar.getText() + "" + s);
 						haypunto=true;
 					}
-					
 					break;
 				case "\u2190":
 					borrarLast();
-					lblMostrar.setText(cadenaCal.toString());
+					lblMostrar.setText(cadenaNum.toString());
 
 					break;
-				
+					
 				default: //cualquier simbolo sin caso
 					if (!haysimbolo && !primerNum) {
-						cadenaCal.add(s);
-						lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
+						pulsarSimbolos(s);
+						//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
 						lblMostrar.setText(s);
 						haysimbolo=true;
 						primerNum=true;
@@ -191,10 +229,15 @@ public class Calculadora extends JFrame implements ActionListener{
 					break;
 				}
 			}
+			else if (s=="C") {
+				limpiarC();
+			}
+			else {
+				pulsarSimbolos(s);
+				System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+				
+			}
 		}
 		
-		if (s=="C") {
-			limpiarC();
-		}
 	}
 }
