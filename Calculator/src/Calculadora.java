@@ -126,25 +126,17 @@ public class Calculadora extends JFrame implements ActionListener{
 		}
 	}
 	
-	public void limpiarC() {
-		cadenaCal.clear();
-		lblMostrar.setText("");
-		lblResumen.setText("");
-		strMostrar.delete(0, strMostrar.length());
-		strResumen.delete(0, strResumen.length());
-		cadenaCal.clear();
-		cadenaNum.clear();
-		haypunto=false;
-		haysimbolo=false;
-	}
 	
 	public void borrarLast() {
-		if (!cadenaCal.isEmpty()) { 	//Si no está vacía hará algo
-			int last=cadenaCal.size()-1;
-			if (cadenaCal.get(last)==".") {
+		if (!strMostrar.toString().isEmpty()) { 	//Si no está vacía hará algo
+			int tama = strMostrar.length()-1;
+			if (strMostrar.charAt(tama)=='.') {
 				haypunto=false;
 			}
-			cadenaCal.remove(last);
+			strMostrar.deleteCharAt(tama);
+		}
+		else {
+			primerNum=true;
 		}
 	}
 	
@@ -178,7 +170,28 @@ public class Calculadora extends JFrame implements ActionListener{
 		
 		actualizarlbl(lblResumen);
 	}
-
+	
+	public void quitarPirmerCero() {
+		if (strMostrar.toString().equals("0")) {
+			System.out.println("mdaskp");
+			strMostrar.deleteCharAt(0);
+			actualizarlbl(lblMostrar);
+		}
+	}
+	
+	public void limpiarC() {
+		cadenaCal.clear();
+		lblMostrar.setText("");
+		lblResumen.setText("");
+		strMostrar.delete(0, strMostrar.length());
+		strResumen.delete(0, strResumen.length());
+		cadenaCal.clear();
+		cadenaNum.clear();
+		haypunto=false;
+		haysimbolo=false;
+		primerNum=true;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Botones a = (Botones)e.getSource();
@@ -189,7 +202,8 @@ public class Calculadora extends JFrame implements ActionListener{
 				primerNum=false;
 				lblMostrar.setText("");
 			}
-			strMostrar.append(a.getSimbolo());
+			quitarPirmerCero();
+			strMostrar.append(s);
 			actualizarlbl(lblMostrar);
 			haysimbolo=false;
 			
@@ -205,26 +219,35 @@ public class Calculadora extends JFrame implements ActionListener{
 					haysimbolo=true;
 					primerNum=true;
 					break;
-				case ".":
+				case ".": //DONE
 					if (!haypunto && !primerNum) {
-						cadenaCal.add(s);
+						strMostrar.append(s);
 						lblMostrar.setText(lblMostrar.getText() + "" + s);
 						haypunto=true;
+					}
+					else if (primerNum) {
+						strMostrar.append("0"+s);
+						actualizarlbl(lblMostrar);
+						haypunto=true;
+						primerNum=false;
 					}
 					break;
 				case "\u2190":
 					borrarLast();
-					lblMostrar.setText(cadenaNum.toString());
-
+					actualizarlbl(lblMostrar);
 					break;
 					
 				default: //cualquier simbolo sin caso
 					if (!haysimbolo && !primerNum) {
-						pulsarSimbolos(s);
-						//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
-						lblMostrar.setText(s);
-						haysimbolo=true;
-						primerNum=true;
+						if (lblMostrar.getText()!="") { //RESUELVE "BUG"
+							pulsarSimbolos(s);
+							//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
+							haypunto=false;
+							lblMostrar.setText(s);
+							haysimbolo=true;
+							primerNum=true;
+						}
+
 					}
 					break;
 				}
