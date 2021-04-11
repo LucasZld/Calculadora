@@ -173,7 +173,6 @@ public class Calculadora extends JFrame implements ActionListener{
 	
 	public void quitarPirmerCero() {
 		if (strMostrar.toString().equals("0")) {
-			System.out.println("mdaskp");
 			strMostrar.deleteCharAt(0);
 			actualizarlbl(lblMostrar);
 		}
@@ -238,7 +237,10 @@ public class Calculadora extends JFrame implements ActionListener{
 					break;
 					
 				default: //cualquier simbolo sin caso
-					if (!haysimbolo && !primerNum) {
+					int tama=strMostrar.length()-1;
+					char last = strMostrar.charAt(tama);
+					System.out.println(last);
+					if (!haysimbolo && !primerNum && last!='.') {
 						if (lblMostrar.getText()!="") { //RESUELVE "BUG"
 							pulsarSimbolos(s);
 							//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
