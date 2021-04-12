@@ -20,6 +20,7 @@ public class Botones extends JButton {
 		} catch (Exception e) {
 			numero = false;
 		}
+		//setFont(new Font("Dialog", Font.PLAIN,18));
 		setFont(new Font("Tahoma", Font.PLAIN,18));
 		setMargin(new Insets(0,0,0,0));
 		setBackground(Color.darkGray);
