@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	// test 2
-	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "s10"};
+	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "Ans"};
 	
 	private Botones[] btn;
 	private Operaciones op = new Operaciones();
@@ -28,8 +28,9 @@ public class Calculadora extends JFrame implements ActionListener{
 	private StringBuilder strMostrar  = new StringBuilder();
 	private StringBuilder strResumen = new StringBuilder();
 	
-	private boolean haysimbolo=false, haypunto=false, primerNum=true;
+	private boolean pAbierto=false, haysimbolo=false, haypunto=false, primerNum=true, heoperado=false;
 	private int pAb, pCe;
+	private float resultado, aux;
 	
 	private JPanel contentPane;
 	private JLabel lblMostrar;
@@ -154,6 +155,10 @@ public class Calculadora extends JFrame implements ActionListener{
 		}
 	}
 	
+	public void actualizarlbl(float res) {
+		lblMostrar.setText(""+res);
+	}
+	
 	public void actualizarlbl(JTextField lbl) {
 		if (lbl.toString().equals(lblMostrar.toString())) {
 			lbl.setText(strMostrar.toString());
@@ -162,6 +167,24 @@ public class Calculadora extends JFrame implements ActionListener{
 			lbl.setText(strResumen.toString());
 		}
 		
+	}
+	
+	public void pulsarSimbolos(String s, int a) {
+		heoperado=false;
+		clearCadenas();
+		if (s!="=") {
+			cadenaCal.add(s);
+		}
+		if (s!="(" && s!=")") {
+			cadenaNum.add(resultado);
+			strResumen.delete(0, strResumen.length());
+			strResumen.append(resultado + s);
+			strMostrar.delete(0, strMostrar.length());
+			actualizarlbl(lblResumen);
+		}
+		else {
+			lblMostrar.setText(lblMostrar.getText()+s);
+		}
 	}
 	
 	public void pulsarSimbolos(String s) {
@@ -190,20 +213,24 @@ public class Calculadora extends JFrame implements ActionListener{
 		char last=label.charAt(label.length()-1);
 		return last;
 	}
-	
+	public void clearCadenas() {
+		cadenaCal.clear();
+		cadenaNum.clear();
+	}
 	public void limpiarC() {
+		resultado=0;
 		pAb=0;
 		pCe=0;
-		cadenaCal.clear();
 		lblMostrar.setText("");
 		lblResumen.setText("");
 		strMostrar.delete(0, strMostrar.length());
 		strResumen.delete(0, strResumen.length());
-		cadenaCal.clear();
-		cadenaNum.clear();
+		clearCadenas();
 		haypunto=false;
 		haysimbolo=false;
 		primerNum=true;
+		pAbierto=false;
+		heoperado=false;
 	}
 	
 	@Override
@@ -215,6 +242,12 @@ public class Calculadora extends JFrame implements ActionListener{
 			if (primerNum) {
 				primerNum=false;
 				lblMostrar.setText("");
+				if (heoperado) {
+					strResumen.delete(0, strResumen.length());
+					clearCadenas();
+					heoperado=false;
+				}
+				
 			}
 			quitarPirmerCero();
 			strMostrar.append(s);
@@ -244,11 +277,19 @@ public class Calculadora extends JFrame implements ActionListener{
 				}
 				break;
 			case "=":
+				if (!heoperado) {heoperado=true;}
 				pulsarSimbolos(s);
 				System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+				resultado = op.operar(cadenaNum, cadenaCal);
+				aux=resultado;
+				actualizarlbl(resultado);
+				primerNum=true;
 				break;
 			case "C":
 				limpiarC();
+				break;
+			case "Ans":
+				
 				break;
 //			case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
 //				pulsarSimbolos(s);
@@ -266,16 +307,29 @@ public class Calculadora extends JFrame implements ActionListener{
 			break;
 				
 			default: //cualquier simbolo sin caso
+				if (heoperado && primerNum) {
+					strMostrar.append(resultado);
+					primerNum=false;
+				}
 				int tama=strMostrar.length()-1;
 				char last = strMostrar.charAt(tama);
 				if (!haysimbolo && !primerNum && last!='.') {
 					if (lblMostrar.getText()!="") { //RESUELVE "BUG"
-						pulsarSimbolos(s);
-						//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
-						haypunto=false;
-						lblMostrar.setText(s);
-						haysimbolo=true;
-						primerNum=true;
+						if (!heoperado) {
+							pulsarSimbolos(s);
+							haypunto=false;
+							lblMostrar.setText(s);
+							haysimbolo=true;
+							primerNum=true;
+						}
+						else {
+							pulsarSimbolos(s,1);
+							haypunto=false;
+							lblMostrar.setText(s);
+							haysimbolo=true;
+							primerNum=true;
+							
+						}
 					}
 
 				}
