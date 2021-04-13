@@ -64,7 +64,7 @@ public class Operaciones {
 	public void segundoOperador(ArrayList<Float> nums, ArrayList<String> ops, int i, int j) {
 		while (ops.get(i)!=")") {
 			switch (ops.get(i)) {
-			case "x":
+			case "*":
 				nums.set(i, mult(nums.get(i),nums.get(i+1)));
 				nums.remove(i+1);
 				ops.remove(i);
