@@ -19,13 +19,15 @@ import java.awt.event.ActionEvent;
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	
-	private Botones[] btn;
 	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "s10"};
+	
+	private Botones[] btn;
 	private Operaciones op = new Operaciones();
 	private ArrayList<String> cadenaCal = new ArrayList<String>();
 	private ArrayList<Float> cadenaNum = new ArrayList<Float>();
+	private StringBuilder strMostrar  = new StringBuilder();
+	private StringBuilder strResumen = new StringBuilder();
 	
-	private StringBuilder strMostrar  = new StringBuilder(), strResumen = new StringBuilder();
 	private boolean haysimbolo=false, haypunto=false, primerNum=true;
 	private int pAb, pCe;
 	
@@ -133,10 +135,10 @@ public class Calculadora extends JFrame implements ActionListener{
 			if (strMostrar.charAt(tama)=='.') {
 				haypunto=false;
 			}
-/*			else if (!siEsNum(""+lblMostrar.getText())) { //ARREGLAR EL PODER BORRAR SIMBOLOS
-				cadenaCal.remove(cadenaCal.size()-1);
-			}
-*/			strMostrar.deleteCharAt(tama);
+//			else if (!siEsNum(""+lblMostrar.getText())) { //ARREGLAR EL PODER BORRAR SIMBOLOS
+//				cadenaCal.remove(cadenaCal.size()-1);
+//			}
+			strMostrar.deleteCharAt(tama);
 		}
 		else {
 			primerNum=true;
@@ -150,11 +152,10 @@ public class Calculadora extends JFrame implements ActionListener{
 		else {
 			lbl.setText(strResumen.toString());
 		}
-		
 	}
 	
 	public void actualizarlbl(JTextField lbl) {
-		if (lbl.equals(lblMostrar.toString())) {
+		if (lbl.toString().equals(lblMostrar.toString())) {
 			lbl.setText(strMostrar.toString());
 		}
 		else {
@@ -219,73 +220,68 @@ public class Calculadora extends JFrame implements ActionListener{
 			strMostrar.append(s);
 			actualizarlbl(lblMostrar);
 			haysimbolo=false;
-			
-			
 		} 
 		else {
-			if (s!= "=" && s!="C") {
-				switch (s) {
-				case "±":	//NUMERO NEGATIVO NO COMPLETADO
-					cadenaCal.add(s);
-					lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"-"); //no tiene que suceder si pones un nÃºmero negativo hasta que se introduzca otro simbolo
-					lblMostrar.setText(lblMostrar.getText()+"-");
-					haysimbolo=true;
-					primerNum=true;
-					break;
-				case ".": //DONE
-					if (!haypunto && !primerNum) {
-						strMostrar.append(s);
-						lblMostrar.setText(lblMostrar.getText() + "" + s);
-						haypunto=true;
-					}
-					else if (primerNum) {
-						strMostrar.append("0"+s);
-						actualizarlbl(lblMostrar);
-						haypunto=true;
-						primerNum=false;
-					}
-					break;
-/*				case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
-					pulsarSimbolos(s);
-					pAb++;
-					break;
-				case ")":
-					if (pAb>pCe && siEsNum(""+lastCharMostrar(strMostrar))) {
-						pulsarSimbolos(s);
-						pCe++;
-					}
-					break;
-*/				case "\u2190":
-					borrarLast();
-					actualizarlbl(lblMostrar);
-					break;
-					
-				default: //cualquier simbolo sin caso
-					int tama=strMostrar.length()-1;
-					char last = strMostrar.charAt(tama);
-					if (!haysimbolo && !primerNum && last!='.') {
-						if (lblMostrar.getText()!="") { //RESUELVE "BUG"
-							pulsarSimbolos(s);
-							//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
-							haypunto=false;
-							lblMostrar.setText(s);
-							haysimbolo=true;
-							primerNum=true;
-						}
-
-					}
-					break;
+			switch (s) {
+			case "±":	//NUMERO NEGATIVO NO COMPLETADO
+				cadenaCal.add(s);
+				lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"-"); //no tiene que suceder si pones un nÃºmero negativo hasta que se introduzca otro simbolo
+				lblMostrar.setText(lblMostrar.getText()+"-");
+				haysimbolo=true;
+				primerNum=true;
+				break;
+			case ".": //DONE
+				if (!haypunto && !primerNum) {
+					strMostrar.append(s);
+					lblMostrar.setText(lblMostrar.getText() + "" + s);
+					haypunto=true;
 				}
-			}
-			else if (s=="C") {
-				limpiarC();
-			}
-			else {
+				else if (primerNum) {
+					strMostrar.append("0"+s);
+					actualizarlbl(lblMostrar);
+					haypunto=true;
+					primerNum=false;
+				}
+				break;
+			case "=":
 				pulsarSimbolos(s);
 				System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+				break;
+			case "C":
+				limpiarC();
+				break;
+//			case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
+//				pulsarSimbolos(s);
+//				pAb++;
+//				break;
+//			case ")":
+//				if (pAb>pCe && siEsNum(""+lastCharMostrar(strMostrar))) {
+//					pulsarSimbolos(s);
+//					pCe++;
+//				}
+//				break;
+			case "\u2190": // <--
+				borrarLast();
+				actualizarlbl(lblMostrar);
+			break;
 				
+			default: //cualquier simbolo sin caso
+				int tama=strMostrar.length()-1;
+				char last = strMostrar.charAt(tama);
+				if (!haysimbolo && !primerNum && last!='.') {
+					if (lblMostrar.getText()!="") { //RESUELVE "BUG"
+						pulsarSimbolos(s);
+						//lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+s);
+						haypunto=false;
+						lblMostrar.setText(s);
+						haysimbolo=true;
+						primerNum=true;
+					}
+
+				}
+				break;
 			}
 		}
-		
 	}
 }
+
