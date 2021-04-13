@@ -5,6 +5,7 @@ public class Operaciones {
 	
 	private int indexO = 0;
 	private int indexN = 0;
+	private float resultado;
 
 	public float operar(ArrayList<Float> nums, ArrayList<String> ops) {
 		ops.add(")");
@@ -13,7 +14,8 @@ public class Operaciones {
 		primerOperador(nums, ops, i, j);
 		segundoOperador(nums, ops, i, j);
 		tercerOperador(nums, ops, i, j);
-		return nums.get(0);
+		resultado = nums.get(0);
+		return resultado;
 	}
 
 	public void parentesis (ArrayList<Float> nums, ArrayList<String> ops, int i, int j) {
@@ -108,6 +110,10 @@ public class Operaciones {
 				break;
 			}
 		}
+	}
+	
+	public float getResultado() {
+		return resultado;
 	}
 	
 	public float suma(float num1, float num2) {
