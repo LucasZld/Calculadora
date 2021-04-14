@@ -192,23 +192,32 @@ public class Calculadora extends JFrame implements ActionListener{
 		if (s!="=") {
 			cadenaCal.add(s);
 		}
-		if (s!="(" && s!=")") {
-			if (parentesis>0) {
-				System.out.println(strMostrar);
+		if (s!="(" && s!=")") { //si no son parentesis
+			if (parentesis>0) {	//pero hay parentesis abiertos
+				//System.out.println(strMostrar + " si");
 				cadenaNum.add(Float.parseFloat(strMostrar.toString()));
 				strResumen.append(strMostrar.toString() + s);
 				strMostrar.setLength(0);
-				System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+				//System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
 				actualizarlbl(lblResumen);
 			}
 			else {
-				cadenaNum.add(Float.parseFloat(lblMostrar.getText()));
-				strResumen.append(strMostrar.toString() + s);
-				strMostrar.delete(0, strMostrar.length());
-				actualizarlbl(lblResumen);
+				if (cadenaCal.get(cadenaCal.size()-1)==")") { //si hay ) en la posición anterior fuerzo el pintado del parentesis
+					strResumen.append(strMostrar.toString() + ")" + s);
+					strMostrar.delete(0, strMostrar.length());
+					actualizarlbl(lblResumen);
+					actualizarlbl(lblMostrar);
+				}
+				else { //default
+					cadenaNum.add(Float.parseFloat(lblMostrar.getText())); 
+					strResumen.append(strMostrar.toString() + s);
+					strMostrar.delete(0, strMostrar.length());
+					actualizarlbl(lblResumen);
+				}
 			}
 		}
-		else {
+		else { // si son parentesis
+			System.out.println("soy yo");
 			lblMostrar.setText(lblMostrar.getText()+s);
 		}
 	}
@@ -260,7 +269,12 @@ public class Calculadora extends JFrame implements ActionListener{
 			}
 			quitarPirmerCero();
 			strMostrar.append(s);
-			actualizarlbl(lblMostrar);
+			if (parentesis>0) {
+				lblMostrar.setText(lblMostrar.getText()+s);
+			}
+			else {
+				actualizarlbl(lblMostrar);
+			}
 			haysimbolo=false;
 		} 
 		else {
@@ -286,13 +300,15 @@ public class Calculadora extends JFrame implements ActionListener{
 				}
 				break;
 			case "=":
-				if (!heoperado) {heoperado=true;}
-				pulsarSimbolos(s);
-				System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
-				resultado = op.operar(cadenaNum, cadenaCal);
-				aux=resultado;
-				actualizarlbl(resultado);
-				primerNum=true;
+				if (!primerNum) {
+					if (!heoperado) {heoperado=true;}
+					pulsarSimbolos(s);
+					System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+					resultado = op.operar(cadenaNum, cadenaCal);
+					aux=resultado;
+					actualizarlbl(resultado);
+					primerNum=true;
+				}
 				break;
 			case "C":
 				limpiarC();
@@ -301,12 +317,21 @@ public class Calculadora extends JFrame implements ActionListener{
 				
 				break;
 			case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
+				if (parentesis==0) {
+					lblMostrar.setText("");
+				}
+				strResumen.append(s);
 				pulsarSimbolos(s);
 				parentesis++;
+				primerNum=false;
 				break;
 			case ")":
 				if (parentesis>0) {// && siEsNum(""+lastCharMostrar(strMostrar))
+					cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+					System.out.println(strMostrar);
 					pulsarSimbolos(s);
+					System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+					System.out.println(strResumen);
 					parentesis--;
 				}
 				break;
@@ -327,16 +352,26 @@ public class Calculadora extends JFrame implements ActionListener{
 						if (!heoperado) {
 							pulsarSimbolos(s);
 							haypunto=false;
-							lblMostrar.setText(s);
+							if (parentesis>0) {
+								lblMostrar.setText(lblMostrar.getText()+s);
+							}else {
+								lblMostrar.setText(s);
+								primerNum=true;
+							}
 							haysimbolo=true;
-							primerNum=true;
+							
 						}
 						else {
 							pulsarSimbolos(s,1);
 							haypunto=false;
-							lblMostrar.setText(s);
+							if (parentesis>0) {
+								lblMostrar.setText(lblMostrar.getText()+s);
+							}else {
+								lblMostrar.setText(s);
+								primerNum=true;
+							}
 							haysimbolo=true;
-							primerNum=true;
+							
 							
 						}
 					}
