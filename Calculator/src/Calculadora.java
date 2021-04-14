@@ -217,7 +217,6 @@ public class Calculadora extends JFrame implements ActionListener{
 			}
 		}
 		else { // si son parentesis
-			System.out.println("soy yo");
 			lblMostrar.setText(lblMostrar.getText()+s);
 		}
 	}
@@ -281,7 +280,7 @@ public class Calculadora extends JFrame implements ActionListener{
 			switch (s) {
 			case "±":	//NUMERO NEGATIVO NO COMPLETADO
 				cadenaCal.add(s);
-				lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"-"); //no tiene que suceder si pones un n√∫mero negativo hasta que se introduzca otro simbolo
+				lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"-"); //no tiene que suceder si pones un numero negativo hasta que se introduzca otro simbolo
 				lblMostrar.setText(lblMostrar.getText()+"-");
 				haysimbolo=true;
 				primerNum=true;
@@ -338,6 +337,9 @@ public class Calculadora extends JFrame implements ActionListener{
 					System.out.println(strResumen);
 					strResumen.append(")");
 					parentesis--;
+					if (parentesis==0) {
+						strMostrar.append(")");
+					}
 				}
 				break;
 			case "\u2190": // <--
@@ -351,8 +353,8 @@ public class Calculadora extends JFrame implements ActionListener{
 					primerNum=false;
 				}
 				
-				char last = strMostrar.charAt(strMostrar.length()-1);
-				if (!haysimbolo && !primerNum && last!='.') {
+				char last = strMostrar.charAt(strMostrar.length()-1); //err
+				if (!haysimbolo && !primerNum && last!='.' && last!=')') {
 					if (lblMostrar.getText()!="") { //RESUELVE "BUG"
 						if (!heoperado) {
 							pulsarSimbolos(s);
@@ -381,6 +383,23 @@ public class Calculadora extends JFrame implements ActionListener{
 						}
 					}
 
+				}
+				else if (last==')') {
+					System.out.println("estoy");
+					if (parentesis>0) {
+						System.out.println("if");
+						lblMostrar.setText(lblMostrar.getText()+s);
+						pulsarSimbolos(s); //err
+					}
+					else {
+						System.out.println("else");
+						strMostrar.setLength(0);
+						lblMostrar.setText(s);
+						strResumen.append(s);
+						cadenaCal.add(s);
+						primerNum=true;
+						haysimbolo=true;
+					}
 				}
 				break;
 			}
