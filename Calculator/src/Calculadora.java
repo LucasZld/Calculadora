@@ -301,6 +301,9 @@ public class Calculadora extends JFrame implements ActionListener{
 			case "=":
 				if (!primerNum) {
 					if (!heoperado) {heoperado=true;}
+					if (!cadenaCal.isEmpty() && cadenaCal.get(cadenaCal.size()-1)==")") { //si el ultimo simbolo es ) vacia strMostrar
+						strMostrar.setLength(0);
+					}
 					pulsarSimbolos(s);
 					System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
 					resultado = op.operar(cadenaNum, cadenaCal);
