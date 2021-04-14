@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	// test 2
-	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "*","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "Ans"};
+	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "x","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "Ans"};
 	
 	private Botones[] btn;
 	private Operaciones op = new Operaciones();
@@ -28,8 +28,8 @@ public class Calculadora extends JFrame implements ActionListener{
 	private StringBuilder strMostrar  = new StringBuilder();
 	private StringBuilder strResumen = new StringBuilder();
 	
-	private boolean pAbierto=false, haysimbolo=false, haypunto=false, primerNum=true, heoperado=false;
-	private int pAb, pCe;
+	private boolean haysimbolo=false, haypunto=false, primerNum=true, heoperado=false;
+	private int pAb, pCe; //cambiar a una sola variable
 	private float resultado, aux;
 	
 	private JPanel contentPane;
@@ -177,9 +177,9 @@ public class Calculadora extends JFrame implements ActionListener{
 		}
 		if (s!="(" && s!=")") {
 			cadenaNum.add(resultado);
-			strResumen.delete(0, strResumen.length());
+			strResumen.setLength(0);
 			strResumen.append(resultado + s);
-			strMostrar.delete(0, strMostrar.length());
+			strMostrar.setLength(0);
 			actualizarlbl(lblResumen);
 		}
 		else {
@@ -223,13 +223,12 @@ public class Calculadora extends JFrame implements ActionListener{
 		pCe=0;
 		lblMostrar.setText("");
 		lblResumen.setText("");
-		strMostrar.delete(0, strMostrar.length());
-		strResumen.delete(0, strResumen.length());
+		strMostrar.setLength(0);
+		strResumen.setLength(0);
 		clearCadenas();
 		haypunto=false;
 		haysimbolo=false;
 		primerNum=true;
-		pAbierto=false;
 		heoperado=false;
 	}
 	
@@ -243,11 +242,11 @@ public class Calculadora extends JFrame implements ActionListener{
 				primerNum=false;
 				lblMostrar.setText("");
 				if (heoperado) {
-					strResumen.delete(0, strResumen.length());
+					strResumen.setLength(0);
+					actualizarlbl(lblResumen);
 					clearCadenas();
 					heoperado=false;
 				}
-				
 			}
 			quitarPirmerCero();
 			strMostrar.append(s);
