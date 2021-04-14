@@ -203,7 +203,7 @@ public class Calculadora extends JFrame implements ActionListener{
 			}
 			else {
 				if (cadenaCal.get(cadenaCal.size()-1)==")") { //si hay ) en la posición anterior fuerzo el pintado del parentesis
-					strResumen.append(strMostrar.toString() + ")" + s);
+					strResumen.append(strMostrar.toString() + s); //+ ")" + s no hace falta
 					strMostrar.delete(0, strMostrar.length());
 					actualizarlbl(lblResumen);
 					actualizarlbl(lblMostrar);
@@ -327,11 +327,16 @@ public class Calculadora extends JFrame implements ActionListener{
 				break;
 			case ")":
 				if (parentesis>0) {// && siEsNum(""+lastCharMostrar(strMostrar))
-					cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+					if (strMostrar.length()!=0) { //solucionar error "empty String"
+						cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+					}
+					strResumen.append(strMostrar);
 					System.out.println(strMostrar);
 					pulsarSimbolos(s);
+					strMostrar.setLength(0);
 					System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
 					System.out.println(strResumen);
+					strResumen.append(")");
 					parentesis--;
 				}
 				break;
