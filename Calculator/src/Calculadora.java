@@ -26,7 +26,8 @@ public class Calculadora extends JFrame implements ActionListener{
 	private ArrayList<String> cadenaCal = new ArrayList<String>();
 	private ArrayList<Float> cadenaNum = new ArrayList<Float>();
 	private StringBuilder strMostrar  = new StringBuilder();
-	private StringBuilder strResumen = new StringBuilder();	
+	private StringBuilder strResumen = new StringBuilder();
+	
 	
 	private boolean haysimbolo=false, haypunto=false, primerNum=true, heoperado=false;
 	private int parentesis=0;
@@ -191,7 +192,7 @@ public class Calculadora extends JFrame implements ActionListener{
 		if (s!="=") {
 			cadenaCal.add(s);
 		}
-		if (s!="(" && s!=")") {
+		if (s!="(" && s!=")") 
 			if (parentesis>0) {
 				System.out.println(strMostrar);
 				cadenaNum.add(Float.parseFloat(strMostrar.toString()));
@@ -206,8 +207,6 @@ public class Calculadora extends JFrame implements ActionListener{
 				strMostrar.delete(0, strMostrar.length());
 				actualizarlbl(lblResumen);
 			}
-
-		}
 		else {
 			lblMostrar.setText(lblMostrar.getText()+s);
 		}
