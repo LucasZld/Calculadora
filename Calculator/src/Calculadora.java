@@ -192,7 +192,7 @@ public class Calculadora extends JFrame implements ActionListener{
 		if (s!="=") {
 			cadenaCal.add(s);
 		}
-		if (s!="(" && s!=")") 
+		if (s!="(" && s!=")") {
 			if (parentesis>0) {
 				System.out.println(strMostrar);
 				cadenaNum.add(Float.parseFloat(strMostrar.toString()));
@@ -207,6 +207,7 @@ public class Calculadora extends JFrame implements ActionListener{
 				strMostrar.delete(0, strMostrar.length());
 				actualizarlbl(lblResumen);
 			}
+		}
 		else {
 			lblMostrar.setText(lblMostrar.getText()+s);
 		}
