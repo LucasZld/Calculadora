@@ -26,10 +26,10 @@ public class Calculadora extends JFrame implements ActionListener{
 	private ArrayList<String> cadenaCal = new ArrayList<String>();
 	private ArrayList<Float> cadenaNum = new ArrayList<Float>();
 	private StringBuilder strMostrar  = new StringBuilder();
-	private StringBuilder strResumen = new StringBuilder();
+	private StringBuilder strResumen = new StringBuilder();	
 	
 	private boolean haysimbolo=false, haypunto=false, primerNum=true, heoperado=false;
-	private int pAb, pCe; //cambiar a una sola variable
+	private int parentesis=0;
 	private float resultado, aux;
 	
 	private JPanel contentPane;
@@ -192,10 +192,21 @@ public class Calculadora extends JFrame implements ActionListener{
 			cadenaCal.add(s);
 		}
 		if (s!="(" && s!=")") {
-			cadenaNum.add(Float.parseFloat(lblMostrar.getText()));
-			strResumen.append(strMostrar.toString() + s);
-			strMostrar.delete(0, strMostrar.length());
-			actualizarlbl(lblResumen);
+			if (parentesis>0) {
+				System.out.println(strMostrar);
+				cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+				strResumen.append(strMostrar.toString() + s);
+				strMostrar.setLength(0);
+				System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+				actualizarlbl(lblResumen);
+			}
+			else {
+				cadenaNum.add(Float.parseFloat(lblMostrar.getText()));
+				strResumen.append(strMostrar.toString() + s);
+				strMostrar.delete(0, strMostrar.length());
+				actualizarlbl(lblResumen);
+			}
+
 		}
 		else {
 			lblMostrar.setText(lblMostrar.getText()+s);
@@ -219,8 +230,7 @@ public class Calculadora extends JFrame implements ActionListener{
 	}
 	public void limpiarC() {
 		resultado=0;
-		pAb=0;
-		pCe=0;
+		parentesis=0;
 		lblMostrar.setText("");
 		lblResumen.setText("");
 		strMostrar.setLength(0);
@@ -290,16 +300,16 @@ public class Calculadora extends JFrame implements ActionListener{
 			case "Ans":
 				
 				break;
-//			case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
-//				pulsarSimbolos(s);
-//				pAb++;
-//				break;
-//			case ")":
-//				if (pAb>pCe && siEsNum(""+lastCharMostrar(strMostrar))) {
-//					pulsarSimbolos(s);
-//					pCe++;
-//				}
-//				break;
+			case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
+				pulsarSimbolos(s);
+				parentesis++;
+				break;
+			case ")":
+				if (parentesis>0) {// && siEsNum(""+lastCharMostrar(strMostrar))
+					pulsarSimbolos(s);
+					parentesis--;
+				}
+				break;
 			case "\u2190": // <--
 				borrarLast();
 				actualizarlbl(lblMostrar);
@@ -310,8 +320,8 @@ public class Calculadora extends JFrame implements ActionListener{
 					strMostrar.append(resultado);
 					primerNum=false;
 				}
-				int tama=strMostrar.length()-1;
-				char last = strMostrar.charAt(tama);
+				
+				char last = strMostrar.charAt(strMostrar.length()-1);
 				if (!haysimbolo && !primerNum && last!='.') {
 					if (lblMostrar.getText()!="") { //RESUELVE "BUG"
 						if (!heoperado) {
