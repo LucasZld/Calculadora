@@ -120,6 +120,7 @@ public class Calculadora extends JFrame implements ActionListener{
 			contentPane.add(btn[i]);
 			btn[i].addActionListener(this);
 		}
+		expandir.doClick(); //quitar
 	}
 	
 	public boolean siEsNum(String cad) {
@@ -250,10 +251,13 @@ public class Calculadora extends JFrame implements ActionListener{
 		heoperado=false;
 	}
 	
+//**************************************************************************************************************************************
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Botones a = (Botones)e.getSource();
 		String s = a.getSimbolo();
+		
+		System.out.println(strMostrar.toString());
 		
 		if (a.isNumero()) {
 			if (primerNum) {
@@ -318,10 +322,19 @@ public class Calculadora extends JFrame implements ActionListener{
 			case "Ans":
 				
 				break;
-			case "(":	//parentesis pero arreglar la eliminación del primer parentesis al poner un número
-				if (parentesis==0) {
-					lblMostrar.setText("");
+			case "(":
+				if (strMostrar.toString()!="") {
+					cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+					cadenaCal.add("x");
+					lblMostrar.setText(lblMostrar.getText()+"x");
+					strMostrar.setLength(0);
 				}
+				else {
+					if (parentesis==0) {
+						lblMostrar.setText("");
+					}
+				}
+				
 				strResumen.append(s);
 				pulsarSimbolos(s);
 				parentesis++;
