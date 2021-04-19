@@ -19,12 +19,12 @@ import java.awt.event.ActionEvent;
 public class Calculadora extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4781031710737270239L;
 	// test 2
-	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "x","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","±", "0", ".", "=", "%", "Ans"};
+	private String[] simbolos= {"C", "\u221A", "/", "\u2190", "(", ")", "7", "8", "9", "x","s3","s4", "4", "5", "6", "+", "s5", "s6", "1", "2", "3", "-","s7", "s8","Â±", "0", ".", "=", "%", "Ans"};
 	
 	private Botones[] btn;
 	private Operaciones op = new Operaciones();
 	private ArrayList<String> cadenaCal = new ArrayList<String>();
-	private ArrayList<Float> cadenaNum = new ArrayList<Float>();
+	private ArrayList<Float>  cadenaNum = new ArrayList<Float>();
 	private StringBuilder strMostrar  = new StringBuilder();
 	private StringBuilder strResumen = new StringBuilder();
 	
@@ -133,13 +133,13 @@ public class Calculadora extends JFrame implements ActionListener{
 	}
 	
 	public void borrarLast() {
-		if (!strMostrar.toString().isEmpty()) { 	//Si no está vacía hará algo
+		if (!strMostrar.toString().isEmpty()) { 	//Si no estÃ¡ vacÃ­a harÃ¡ algo
 			int tama = strMostrar.length()-1;
 			if (strMostrar.charAt(tama)=='.') {
 				haypunto=false;
 			}
 //			else if (!siEsNum(""+lblMostrar.getText())) { //ARREGLAR EL PODER BORRAR SIMBOLOS
-//				cadenaCal.remove(cadenaCal.size()-1);
+//				.remove(.size()-1);
 //			}
 			strMostrar.deleteCharAt(tama);
 		}
@@ -175,10 +175,10 @@ public class Calculadora extends JFrame implements ActionListener{
 		heoperado=false;
 		clearCadenas();
 		if (s!="=") {
-			cadenaCal.add(s);
+			
 		}
 		if (s!="(" && s!=")") {
-			cadenaNum.add(resultado);
+			
 			strResumen.setLength(0);
 			strResumen.append(resultado + s);
 			strMostrar.setLength(0);
@@ -191,30 +191,34 @@ public class Calculadora extends JFrame implements ActionListener{
 	
 	public void pulsarSimbolos(String s) {
 		if (s!="=") {
-			cadenaCal.add(s);
+			
 		}
 		if (s!="(" && s!=")") { //si no son parentesis
 			if (parentesis>0) {	//pero hay parentesis abiertos
 				//System.out.println(strMostrar + " si");
-				cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+				
 				strResumen.append(strMostrar.toString() + s);
 				strMostrar.setLength(0);
-				//System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+				//System.out.println(.toString() + " " + .toString());
 				actualizarlbl(lblResumen);
 			}
 			else {
-				if (cadenaCal.get(cadenaCal.size()-1)==")") { //si hay ) en la posición anterior fuerzo el pintado del parentesis
-					strResumen.append(strMostrar.toString() + s); //+ ")" + s no hace falta
-					strMostrar.delete(0, strMostrar.length());
-					actualizarlbl(lblResumen);
-					actualizarlbl(lblMostrar);
+				 if (true) {//si hay ) en la posiciÃ³n anterior fuerzo el pintado del parentesis
+						strResumen.append(strMostrar.toString() + s); //+ ")" + s no hace falta
+						strMostrar.delete(0, strMostrar.length());
+						actualizarlbl(lblResumen);
+						actualizarlbl(lblMostrar);
 				}
-				else { //default
-					cadenaNum.add(Float.parseFloat(lblMostrar.getText())); 
-					strResumen.append(strMostrar.toString() + s);
-					strMostrar.delete(0, strMostrar.length());
-					actualizarlbl(lblResumen);
-				}
+				 else {//default
+						
+						
+						strResumen.append(strMostrar.toString() + s);
+						strMostrar.delete(0, strMostrar.length());
+						actualizarlbl(lblResumen); 
+				 }
+				
+
+				
 			}
 		}
 		else { // si son parentesis
@@ -234,8 +238,7 @@ public class Calculadora extends JFrame implements ActionListener{
 		return last;
 	}
 	public void clearCadenas() {
-		cadenaCal.clear();
-		cadenaNum.clear();
+
 	}
 	public void limpiarC() {
 		resultado=0;
@@ -250,6 +253,21 @@ public class Calculadora extends JFrame implements ActionListener{
 		primerNum=true;
 		heoperado=false;
 	}
+	
+	public void StringToArrayList(StringBuilder s) {
+		String auxS = s.toString().replaceAll("\\d*", "").replace(".", "").replace("âˆ’", "~");
+		for (int i = 0; i < auxS.length(); i++) {
+			cadenaCal.add(auxS.charAt(i)+"");
+		}
+		auxS = s.toString().replaceAll("[^\\d.]", ":");
+		String numsString[] = auxS.split(":");
+		for (int j = 0; j < numsString.length; j++) {
+			if (numsString[j]!="") {
+				cadenaNum.add(Float.parseFloat(numsString[j]));
+			}
+		}
+	}
+
 	
 //**************************************************************************************************************************************
 	@Override
@@ -282,10 +300,10 @@ public class Calculadora extends JFrame implements ActionListener{
 		} 
 		else {
 			switch (s) {
-			case "±":	//NUMERO NEGATIVO NO COMPLETADO
-				cadenaCal.add(s);
-				lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"-"); //no tiene que suceder si pones un numero negativo hasta que se introduzca otro simbolo
-				lblMostrar.setText(lblMostrar.getText()+"-");
+			case "Â±":	//NUMERO NEGATIVO NO COMPLETADO
+
+				lblResumen.setText(lblResumen.getText() + lblMostrar.getText()+"âˆ’"); //no tiene que suceder si pones un numero negativo hasta que se introduzca otro simbolo
+				lblMostrar.setText(lblMostrar.getText()+"âˆ’");
 				haysimbolo=true;
 				primerNum=true;
 				break;
@@ -305,12 +323,12 @@ public class Calculadora extends JFrame implements ActionListener{
 			case "=":
 				if (!primerNum) {
 					if (!heoperado) {heoperado=true;}
-					if (!cadenaCal.isEmpty() && cadenaCal.get(cadenaCal.size()-1)==")") { //si el ultimo simbolo es ) vacia strMostrar
-						strMostrar.setLength(0);
-					}
+
 					pulsarSimbolos(s);
-					System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
-					resultado = op.operar(cadenaNum, cadenaCal);
+					
+					System.out.println(strResumen);
+					StringToArrayList(strResumen);
+					op.operar(cadenaNum, cadenaCal);
 					aux=resultado;
 					actualizarlbl(resultado);
 					primerNum=true;
@@ -324,8 +342,7 @@ public class Calculadora extends JFrame implements ActionListener{
 				break;
 			case "(":
 				if (strMostrar.toString()!="") {
-					cadenaNum.add(Float.parseFloat(strMostrar.toString()));
-					cadenaCal.add("x");
+
 					lblMostrar.setText(lblMostrar.getText()+"x");
 					strMostrar.setLength(0);
 				}
@@ -343,13 +360,13 @@ public class Calculadora extends JFrame implements ActionListener{
 			case ")":
 				if (parentesis>0) {// && siEsNum(""+lastCharMostrar(strMostrar))
 					if (strMostrar.length()!=0) { //solucionar error "empty String"
-						cadenaNum.add(Float.parseFloat(strMostrar.toString()));
+
 					}
 					strResumen.append(strMostrar);
 					System.out.println(strMostrar);
 					pulsarSimbolos(s);
 					strMostrar.setLength(0);
-					System.out.println(cadenaNum.toString() + " " + cadenaCal.toString());
+
 					System.out.println(strResumen);
 					strResumen.append(")");
 					parentesis--;
@@ -412,7 +429,7 @@ public class Calculadora extends JFrame implements ActionListener{
 						strMostrar.setLength(0);
 						lblMostrar.setText(s);
 						strResumen.append(s);
-						cadenaCal.add(s);
+
 						primerNum=true;
 						haysimbolo=true;
 					}

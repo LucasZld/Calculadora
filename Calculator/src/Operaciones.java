@@ -27,7 +27,7 @@ public class Operaciones {
 					indexN = j;
 					operar(nums, ops);
 				break;
-			case "sqr", "!", "+/-":
+			case "V", "!", "~":
 					i++;
 				break;
 			default:
@@ -41,7 +41,7 @@ public class Operaciones {
 	public void primerOperador(ArrayList<Float> nums, ArrayList<String> ops, int i, int j) {
 		while (ops.get(i)!=")") {
 			switch (ops.get(i)) {
-			case "sqr":
+			case "V":
 				nums.set(i, raizCuadrada(nums.get(i)));
 				ops.remove(i);
 				break;
@@ -49,7 +49,7 @@ public class Operaciones {
 				nums.set(i, factorial(nums.get(i)));
 				ops.remove(i);
 				break;
-			case "+/-":
+			case "~":
 				nums.set(i, negar(nums.get(i)));
 				ops.remove(i);
 				break;
@@ -106,8 +106,8 @@ public class Operaciones {
 				ops.remove(i);
 				break;
 			default:
-					System.err.println("Operador erróneo");
-				break;
+				System.err.println("Operador errÃ³neo");
+				return;
 			}
 		}
 	}
@@ -162,12 +162,12 @@ public class Operaciones {
 	//***********For Testing*************/
 	
 	public ArrayList<Float> nums() {
-		ArrayList<Float> n = new ArrayList<Float>(Arrays.asList(1f, 2f, 3f));
+		ArrayList<Float> n = new ArrayList<Float>(Arrays.asList(4f, 4f, 2f));
 		return n;
 	}
 	
 	public ArrayList<String> sim() {
-		ArrayList<String> n = new ArrayList<String>(Arrays.asList("+","(","%","sqr",")"));
+		ArrayList<String> n = new ArrayList<String>(Arrays.asList("(","+","~",")"));
 		return n;
 	}
 
